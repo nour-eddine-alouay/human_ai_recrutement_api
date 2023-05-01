@@ -13,6 +13,8 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\OffreController;
 use App\Http\Controllers\PostuleController;
 use App\Http\Controllers\StatisticsController;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\View;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -25,7 +27,7 @@ Route::post('/login',[AuthController::class,'login']);
 Route::post('/isEmailUnique',[AuthController::class,'isEmailUnique']);
 Route::delete('/user/delete/{id}',[AuthController::class,'deleteUser']);
 
-
+Auth::routes(['verify' => true]);
 
 
 
