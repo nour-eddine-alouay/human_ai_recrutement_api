@@ -25,6 +25,20 @@ Route::post('/login',[AuthController::class,'login']);
 Route::post('/isEmailUnique',[AuthController::class,'isEmailUnique']);
 Route::delete('/user/delete/{id}',[AuthController::class,'deleteUser']);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Route::post('/forgot',[ForgotPasswordController::class,'forgot']);
 Route::post('/reset',[ForgotPasswordController::class,'reset']);
 
