@@ -24,6 +24,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Date;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmail;
+
 
 
 class AuthController extends Controller
@@ -46,9 +49,12 @@ class AuthController extends Controller
             $user = User::create([
                 'email'=>$request->email,
                 'type'=>$request->type,
-                'password'=>Hash::make($request->password)
+                'password'=>Hash::make($request->password),
+                'email_verification_token' => Str::random(60),
             ]);
 
+
+    return response()->json(['message' => 'Registration successful']);
             $candidat_personal_information = canPersonalInfo::create([
                 'nom'=>$request->nom,
                 'prenom'=>$request->prenom,
@@ -99,8 +105,10 @@ class AuthController extends Controller
             $user = User::create([
                 'email'=>$request->email,
                 'type'=>$request->type,
-                'password'=>Hash::make($request->password)
+                'password'=>Hash::make($request->password),
+                'email_verification_token' => Str::random(60),
             ]);
+
 
             $recruteur_entreprise_information = recEntrepriseInfo::create([
                 'pays'=>$request->pays,
@@ -259,4 +267,8 @@ class AuthController extends Controller
             ]);
         }
     }
+
+
+
+
 }

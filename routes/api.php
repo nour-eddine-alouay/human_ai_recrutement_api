@@ -30,17 +30,6 @@ Route::delete('/user/delete/{id}',[AuthController::class,'deleteUser']);
 Auth::routes(['verify' => true]);
 
 
-
-
-
-
-
-
-
-
-
-
-
 Route::post('/forgot',[ForgotPasswordController::class,'forgot']);
 Route::post('/reset',[ForgotPasswordController::class,'reset']);
 
