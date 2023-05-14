@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Date;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmail;
 
 
 
@@ -49,12 +48,9 @@ class AuthController extends Controller
             $user = User::create([
                 'email'=>$request->email,
                 'type'=>$request->type,
-                'password'=>Hash::make($request->password),
-                'email_verification_token' => Str::random(60),
+                'password'=>Hash::make($request->password)
             ]);
 
-
-    return response()->json(['message' => 'Registration successful']);
             $candidat_personal_information = canPersonalInfo::create([
                 'nom'=>$request->nom,
                 'prenom'=>$request->prenom,
@@ -85,6 +81,8 @@ class AuthController extends Controller
                 'success' => false,
             ]);
         }
+
+        
     }
 
     // register recruteur ------------------------------
@@ -105,8 +103,7 @@ class AuthController extends Controller
             $user = User::create([
                 'email'=>$request->email,
                 'type'=>$request->type,
-                'password'=>Hash::make($request->password),
-                'email_verification_token' => Str::random(60),
+                'password'=>Hash::make($request->password)
             ]);
 
 
@@ -146,6 +143,26 @@ class AuthController extends Controller
         }
     }
 
+
+
+    public function verifyEmail(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            $user->email_verified_at = now();
+            $user->save();
+
+            /* return response()->json([
+                'message' => 'Email verified successfully'
+            ]); */
+            return redirect('http://localhost:4200/register?id=' . strval($user['id']));
+        } else {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+    }
+
     // isEmailUnique -------------------------------
     public function isEmailUnique(Request $request){
         $user = User::where('email',$request->email)->first();
@@ -159,7 +176,7 @@ class AuthController extends Controller
         ]);
     }
 
-    // login -------------------------------
+    // login -------------------------------z
     public function login(Request $request){
         $request->validate([
             'email'=>'required',
@@ -188,7 +205,7 @@ class AuthController extends Controller
             ]);
         }
     }
-
+    
     // logout ------------------------------
     public function logout(){
         $user = Auth::user();

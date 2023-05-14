@@ -14,7 +14,10 @@ use App\Http\Controllers\OffreController;
 use App\Http\Controllers\PostuleController;
 use App\Http\Controllers\StatisticsController;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\View;
+
+
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -34,6 +37,22 @@ Route::post('/forgot',[ForgotPasswordController::class,'forgot']);
 Route::post('/reset',[ForgotPasswordController::class,'reset']);
 
 Route::middleware('auth:api')->group(function(){
+    Route::get('verify-email', [EmailVerificationPromptController::class, '__invoke'])
+                ->name('verification.notice');
+
+    Route::get('verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
+                ->middleware(['signed', 'throttle:6,1'])
+                ->name('verification.verify');
+
+    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+                ->middleware('throttle:6,1')
+                ->name('verification.send');
+    
+
+
+
+
+
     // settings commun routes
     Route::post('/logout',[AuthController::class,'logout']);
     Route::put('/user/change-password',[AuthController::class,'changePassword']);
